@@ -1,0 +1,19 @@
+{
+  "name": "quiz-game-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "install-all": "npm install",
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run start --workspace=frontend\"",
+    "build": "npm run build --workspace=frontend",
+    "start-backend": "npm start --workspace=backend",
+    "start-frontend": "npm start --workspace=frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

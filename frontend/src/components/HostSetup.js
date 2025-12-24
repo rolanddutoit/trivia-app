@@ -42,13 +42,18 @@ const HostSetup = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const gameSettings = { numQuestions, category, difficulty };
+    console.log('Emitting createGame with settings:', gameSettings);
     socket.emit('createGame', gameSettings);
   };
 
   socket.on('gameCreated', ({ gameId }) => {
+    console.log('Game created successfully:', gameId);
     setGameId(gameId);
     axios.get(`${backendUrl}/qr/${gameId}`)
-      .then(response => setQrCode(response.data.qrCode))
+      .then(response => {
+        console.log('QR code fetched');
+        setQrCode(response.data.qrCode);
+      })
       .catch(error => console.error('Error fetching QR code:', error));
     navigate(`/host/${gameId}`);
   });

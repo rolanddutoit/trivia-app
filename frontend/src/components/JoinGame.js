@@ -11,7 +11,9 @@ const JoinGame = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('JoinGame component mounted for gameId:', gameId);
     socket.on('joinedGame', () => {
+      console.log('Joined game successfully');
       navigate(`/play/${gameId}`);
     });
 
@@ -22,6 +24,7 @@ const JoinGame = () => {
 
   const handleJoin = (e) => {
     e.preventDefault();
+    console.log('Emitting joinGame for gameId:', gameId, 'playerName:', playerName);
     socket.emit('joinGame', { gameId, playerName });
   };
 

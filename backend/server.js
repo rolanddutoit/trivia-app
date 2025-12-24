@@ -26,6 +26,7 @@ io.on('connection', (socket) => {
 
   // Host creates a game
   socket.on('createGame', (gameSettings) => {
+    console.log('Creating game with settings:', gameSettings);
     const gameId = uuidv4();
     games[gameId] = {
       ...gameSettings,
@@ -38,42 +39,54 @@ io.on('connection', (socket) => {
       answers: {} // to store answers for current question
     };
     socket.join(gameId);
+    console.log('Game created with ID:', gameId);
     socket.emit('gameCreated', { gameId });
   });
 
   // Player joins a game
   socket.on('joinGame', ({ gameId, playerName }) => {
+    console.log('Player joining game:', gameId, 'with name:', playerName);
     if (games[gameId]) {
       const player = { id: socket.id, name: playerName, score: 0 };
       games[gameId].players.push(player);
       games[gameId].scores[socket.id] = 0;
       socket.join(gameId);
+      console.log('Player joined successfully');
       socket.emit('joinedGame', { gameId });
       io.to(gameId).emit('playerJoined', games[gameId].players);
     } else {
+      console.log('Game not found:', gameId);
       socket.emit('error', 'Game not found');
     }
   });
 
   // Host starts the game
   socket.on('startGame', (gameId) => {
+    console.log('Host starting game:', gameId);
     if (games[gameId] && games[gameId].host === socket.id) {
       games[gameId].status = 'active';
       fetchQuestions(gameId).then(() => {
         sendNextQuestion(gameId);
       });
+    } else {
+      console.log('Unauthorized start game attempt for:', gameId);
     }
   });
 
   // Player submits answer
   socket.on('submitAnswer', ({ gameId, answer }) => {
+    console.log('Player submitting answer for game:', gameId, 'answer:', answer);
     const game = games[gameId];
     if (game && game.status === 'active') {
       game.answers[socket.id] = answer;
+      console.log('Answer recorded. Total answers:', Object.keys(game.answers).length, 'Players:', game.players.length);
       // Check if all players have answered
       if (Object.keys(game.answers).length === game.players.length) {
+        console.log('All players answered, processing...');
         processAnswers(gameId);
       }
+    } else {
+      console.log('Invalid submit answer attempt for game:', gameId);
     }
   });
 
