@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import axios from 'axios';
 
-const socket = io('http://localhost:5000');
+const backendUrl = `${window.location.protocol}//${window.location.hostname.replace('3000', '5000')}`;
+const socket = io(backendUrl);
 
 const HostSetup = () => {
   const [numQuestions, setNumQuestions] = useState(10);
@@ -46,7 +47,7 @@ const HostSetup = () => {
 
   socket.on('gameCreated', ({ gameId }) => {
     setGameId(gameId);
-    axios.get(`http://localhost:5000/qr/${gameId}`)
+    axios.get(`${backendUrl}/qr/${gameId}`)
       .then(response => setQrCode(response.data.qrCode))
       .catch(error => console.error('Error fetching QR code:', error));
     navigate(`/host/${gameId}`);
@@ -87,7 +88,7 @@ const HostSetup = () => {
       {gameId && (
         <div>
           <p>Game ID: {gameId}</p>
-          <p>Join Link: http://localhost:3000/join/{gameId}</p>
+          <p>Join Link: {window.location.origin}/join/{gameId}</p>
           {qrCode && <img src={qrCode} alt="QR Code" />}
         </div>
       )}

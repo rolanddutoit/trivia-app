@@ -10,7 +10,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3000", // React dev server
+    origin: "*", // Allow all origins for development
     methods: ["GET", "POST"]
   }
 });
