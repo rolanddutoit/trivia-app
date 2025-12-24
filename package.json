@@ -1,0 +1,21 @@
+{
+  "name": "quiz-game-monorepo",
+  "version": "1.0.0",
+  "description": "A multiplayer quiz game application",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "install-all": "npm install",
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run start --workspace=frontend\"",
+    "build": "npm run build --workspace=frontend",
+    "start-backend": "npm start --workspace=backend",
+    "start-frontend": "npm start --workspace=frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
